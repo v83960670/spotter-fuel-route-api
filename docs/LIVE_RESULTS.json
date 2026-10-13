@@ -1,0 +1,130 @@
+{
+  "verified_date": "2026-10-14 Asia/Kolkata",
+  "provider": "openrouteservice driving-car",
+  "mode": "actual assessment prices; approximate city station coordinates",
+  "results": [
+    {
+      "request": {
+        "start": "Chicago, IL",
+        "finish": "Milwaukee, WI"
+      },
+      "distance_miles": "93.2172",
+      "duration_seconds": 7162.1,
+      "stop_count": 0,
+      "fuel": {
+        "mpg": "10.0000",
+        "max_range_miles": "500.0000",
+        "tank_capacity_gallons": "50.0000",
+        "initial_gallons": "50.0000",
+        "consumed_gallons": "9.3217",
+        "purchased_gallons": "0.0000",
+        "remaining_gallons": "40.6783",
+        "on_route_purchase_cost": "0.00",
+        "initial_inventory_value": null,
+        "total_trip_fuel_cost": null,
+        "currency": "USD",
+        "accounting": "Initial fuel consumed first; trip cost values consumed initial fuel plus purchases. Unconsumed initial inventory is excluded. Decimal ROUND_HALF_UP at output; rounded line items may differ from total by cents."
+      },
+      "metrics": {
+        "cache_hit": false,
+        "directions_calls": 1,
+        "geocoding_calls": 0,
+        "provider_ms": 1139.251,
+        "station_selection_ms": 81.466,
+        "optimization_ms": 0.256,
+        "total_ms": 1225.774
+      },
+      "geometry_coordinate_count": 935,
+      "geometry_omitted": true,
+      "warnings": [
+        "Fuel plan is an estimate along one selected driving route. Road access and fuel needed for station detours are not measured; range feasibility excludes detours.",
+        "Dataset prices have no observation timestamps and may be stale.",
+        "Approximate mode is enabled: city coordinates do not establish actual truck-stop locations or access.",
+        "Named endpoints resolve to GeoNames city centers, not street addresses.",
+        "Starting fuel has no supplied price. Total trip fuel cost is unknown; purchase cost excludes its value."
+      ]
+    },
+    {
+      "request": {
+        "start": "Chicago, IL",
+        "finish": "Denver, CO"
+      },
+      "distance_miles": "1003.2918",
+      "duration_seconds": 57610.6,
+      "stop_count": 2,
+      "fuel": {
+        "mpg": "10.0000",
+        "max_range_miles": "500.0000",
+        "tank_capacity_gallons": "50.0000",
+        "initial_gallons": "50.0000",
+        "consumed_gallons": "100.3292",
+        "purchased_gallons": "50.3292",
+        "remaining_gallons": "0.0000",
+        "on_route_purchase_cost": "146.07",
+        "initial_inventory_value": null,
+        "total_trip_fuel_cost": null,
+        "currency": "USD",
+        "accounting": "Initial fuel consumed first; trip cost values consumed initial fuel plus purchases. Unconsumed initial inventory is excluded. Decimal ROUND_HALF_UP at output; rounded line items may differ from total by cents."
+      },
+      "metrics": {
+        "cache_hit": false,
+        "directions_calls": 1,
+        "geocoding_calls": 0,
+        "provider_ms": 1964.937,
+        "station_selection_ms": 293.866,
+        "optimization_ms": 0.836,
+        "total_ms": 4318.051
+      },
+      "geometry_coordinate_count": 5117,
+      "geometry_omitted": true,
+      "warnings": [
+        "Fuel plan is an estimate along one selected driving route. Road access and fuel needed for station detours are not measured; range feasibility excludes detours.",
+        "Dataset prices have no observation timestamps and may be stale.",
+        "Approximate mode is enabled: city coordinates do not establish actual truck-stop locations or access.",
+        "Named endpoints resolve to GeoNames city centers, not street addresses.",
+        "Starting fuel has no supplied price. Total trip fuel cost is unknown; purchase cost excludes its value."
+      ]
+    },
+    {
+      "request": {
+        "start": "Chicago, IL",
+        "finish": "Los Angeles, CA"
+      },
+      "distance_miles": "2016.0987",
+      "duration_seconds": 113868.1,
+      "stop_count": 9,
+      "fuel": {
+        "mpg": "10.0000",
+        "max_range_miles": "500.0000",
+        "tank_capacity_gallons": "50.0000",
+        "initial_gallons": "50.0000",
+        "consumed_gallons": "201.6099",
+        "purchased_gallons": "151.6099",
+        "remaining_gallons": "0.0000",
+        "on_route_purchase_cost": "466.08",
+        "initial_inventory_value": null,
+        "total_trip_fuel_cost": null,
+        "currency": "USD",
+        "accounting": "Initial fuel consumed first; trip cost values consumed initial fuel plus purchases. Unconsumed initial inventory is excluded. Decimal ROUND_HALF_UP at output; rounded line items may differ from total by cents."
+      },
+      "metrics": {
+        "cache_hit": false,
+        "directions_calls": 1,
+        "geocoding_calls": 0,
+        "provider_ms": 2035.531,
+        "station_selection_ms": 853.917,
+        "optimization_ms": 1.539,
+        "total_ms": 2895.546
+      },
+      "geometry_coordinate_count": 14203,
+      "geometry_omitted": true,
+      "warnings": [
+        "Fuel plan is an estimate along one selected driving route. Road access and fuel needed for station detours are not measured; range feasibility excludes detours.",
+        "Dataset prices have no observation timestamps and may be stale.",
+        "Approximate mode is enabled: city coordinates do not establish actual truck-stop locations or access.",
+        "Named endpoints resolve to GeoNames city centers, not street addresses.",
+        "Starting fuel has no supplied price. Total trip fuel cost is unknown; purchase cost excludes its value."
+      ]
+    }
+  ]
+}

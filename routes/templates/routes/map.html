@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"><title>Spotter | Fuel route planner</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>body{margin:0;font:16px system-ui;color:#172b39;background:#f4f7f9}header,main{padding:20px;max-width:1100px;margin:auto}h1{margin:0 0 8px}form{display:flex;flex-wrap:wrap;gap:12px;align-items:end}label{display:grid;gap:4px}input,button{font:inherit;padding:10px;border:1px solid #8195a2;border-radius:5px}button{background:#145c76;color:white;cursor:pointer}#map{height:55vh;margin-top:20px;border-radius:8px}#status{white-space:pre-wrap}li{margin:8px 0}details{margin-top:15px}pre{overflow:auto;max-height:400px}small{display:block;max-width:850px}</style></head>
+<body><header><h1>Fuel route planner</h1><small>Estimate fuel purchases along a driving route. Station detours are not routed; approximate station coordinates do not establish road access.</small></header>
+<main><form id="planner"><label>Start (City, ST)<input id="start" value="Chicago, IL" required></label><label>Finish (City, ST)<input id="finish" value="Denver, CO" required></label><label>Initial fuel price ($/gal, optional)<input id="price" type="number" min="0.0001" step="0.0001"></label><button id="submit">Plan route</button></form>
+<p id="status" role="status" aria-live="polite">Enter locations to request a real driving route.</p><div id="map" aria-label="Route map"></div><ol id="stops"></ol><ul id="warnings"></ul><details><summary>API response</summary><pre id="response"></pre></details></main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map=L.map('map').setView([39,-98],4);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,referrerPolicy:'strict-origin-when-cross-origin',attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+let layer=L.featureGroup().addTo(map);
+function marker(lat,lon,text,number){const el=document.createElement('span');el.textContent=text;const options=number?{icon:L.divIcon({className:'fuel-marker',html:`<span style="display:grid;place-items:center;background:#145c76;color:white;border:2px solid white;border-radius:50%;width:28px;height:28px;font-weight:bold">${number}</span>`,iconSize:[32,32],iconAnchor:[16,16]})}:{};L.marker([lat,lon],options).bindPopup(el).addTo(layer);}
+document.getElementById('planner').addEventListener('submit',async event=>{
+ event.preventDefault();const button=document.getElementById('submit'),status=document.getElementById('status');button.disabled=true;status.textContent='Calculating…';layer.clearLayers();document.getElementById('stops').replaceChildren();document.getElementById('warnings').replaceChildren();
+ try{const body={start:document.getElementById('start').value,finish:document.getElementById('finish').value};const price=document.getElementById('price').value;if(price)body.initial_fuel_price=price;
+ const response=await fetch('/api/v1/routes/optimize/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const data=await response.json();document.getElementById('response').textContent=JSON.stringify(data,null,2);
+ if(!response.ok){status.textContent=JSON.stringify(data.error);return;}
+ L.geoJSON(data.geometry,{style:{color:'#145c76',weight:5}}).addTo(layer);marker(data.start.latitude,data.start.longitude,'Start');marker(data.finish.latitude,data.finish.longitude,'Finish');
+ data.fuel_stops.forEach((stop,index)=>{const text=`${index+1}. ${stop.name} — $${stop.price_per_gallon}/gal; buy ${stop.gallons} gal ($${stop.cost}); ${stop.precision} coordinates`;marker(stop.latitude,stop.longitude,text,index+1);const li=document.createElement('li');li.textContent=text;document.getElementById('stops').append(li);});
+ data.warnings.forEach(text=>{const li=document.createElement('li');li.textContent=text;document.getElementById('warnings').append(li);});map.fitBounds(layer.getBounds(),{padding:[20,20],maxZoom:14});status.textContent=`${data.distance_miles} miles | Purchases: $${data.fuel.on_route_purchase_cost} | Total trip fuel cost: ${data.fuel.total_trip_fuel_cost===null?'unknown (initial price not supplied)':'$'+data.fuel.total_trip_fuel_cost} | Directions calls: ${data.metrics.directions_calls}`;
+ }catch(error){status.textContent='Request failed. Check the server and network connection.';}finally{button.disabled=false;}
+});
+</script></body></html>

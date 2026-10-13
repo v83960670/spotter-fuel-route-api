@@ -1,0 +1,322 @@
+{
+  "info": {
+    "name": "Spotter Fuel Route API",
+    "description": "Real requests to the configured backend. No API keys belong in this collection. Live routes require the original CSV and server-side ORS setup.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/v1/health/",
+        "description": ""
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Short route \u2014 Chicago to Milwaukee",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/v1/routes/optimize/",
+        "description": "",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"start\": \"Chicago, IL\",\n  \"finish\": \"Milwaukee, WI\",\n  \"initial_fuel_price\": \"3.75\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Map-ready route', () => pm.expect(pm.response.json().geometry.type).to.eql('LineString'));",
+              "pm.test('Nonnegative remaining fuel', () => pm.expect(Number(pm.response.json().fuel.remaining_gallons)).to.be.at.least(0));",
+              "pm.test('At most one directions call', () => pm.expect(pm.response.json().metrics.directions_calls).to.be.at.most(1));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assessment route \u2014 Chicago to Denver",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/v1/routes/optimize/",
+        "description": "Requires ORS key, imported prices and reviewed coordinates or explicit approximate mode. Initial price is a user-supplied accounting example, not observed market data.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"start\": \"Chicago, IL\",\n  \"finish\": \"Denver, CO\",\n  \"initial_fuel_price\": \"3.75\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Map-ready route', () => pm.expect(pm.response.json().geometry.type).to.eql('LineString'));",
+              "pm.test('Nonnegative remaining fuel', () => pm.expect(Number(pm.response.json().fuel.remaining_gallons)).to.be.at.least(0));",
+              "pm.test('At most one directions call', () => pm.expect(pm.response.json().metrics.directions_calls).to.be.at.most(1));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Long route \u2014 Chicago to Los Angeles",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/v1/routes/optimize/",
+        "description": "Multiple stops expected if the station corridor is feasible. Sparse California data or provider limits may correctly produce an error; confirm before recording.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"start\": \"Chicago, IL\",\n  \"finish\": \"Los Angeles, CA\",\n  \"initial_fuel_price\": \"3.75\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Map-ready route', () => pm.expect(pm.response.json().geometry.type).to.eql('LineString'));",
+              "pm.test('Nonnegative remaining fuel', () => pm.expect(Number(pm.response.json().fuel.remaining_gallons)).to.be.at.least(0));",
+              "pm.test('At most one directions call', () => pm.expect(pm.response.json().metrics.directions_calls).to.be.at.most(1));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Coordinate input",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/v1/routes/optimize/",
+        "description": "",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"start\": {\n    \"latitude\": 41.85003,\n    \"longitude\": -87.65005\n  },\n  \"finish\": {\n    \"latitude\": 39.73915,\n    \"longitude\": -104.9847\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Map-ready route', () => pm.expect(pm.response.json().geometry.type).to.eql('LineString'));",
+              "pm.test('Nonnegative remaining fuel', () => pm.expect(Number(pm.response.json().fuel.remaining_gallons)).to.be.at.least(0));",
+              "pm.test('At most one directions call', () => pm.expect(pm.response.json().metrics.directions_calls).to.be.at.most(1));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Same location \u2014 no directions call",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/v1/routes/optimize/",
+        "description": "",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"start\": \"Chicago, IL\",\n  \"finish\": \"Chicago, IL\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('Map-ready route', () => pm.expect(pm.response.json().geometry.type).to.eql('LineString'));",
+              "pm.test('Nonnegative remaining fuel', () => pm.expect(Number(pm.response.json().fuel.remaining_gallons)).to.be.at.least(0));",
+              "pm.test('At most one directions call', () => pm.expect(pm.response.json().metrics.directions_calls).to.be.at.most(1));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Invalid location \u2014 Canada",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/v1/routes/optimize/",
+        "description": "",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"start\": \"Toronto, ON\",\n  \"finish\": \"Denver, CO\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Invalid vehicle \u2014 over capacity",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/v1/routes/optimize/",
+        "description": "",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"start\": \"Chicago, IL\",\n  \"finish\": \"Denver, CO\",\n  \"initial_fuel_price\": \"3.75\",\n  \"initial_fuel_gallons\": 51\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "No feasible fueling \u2014 tiny range, empty tank",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/v1/routes/optimize/",
+        "description": "Requires configured provider and assessment data. Expect no feasible fueling for this dataset; 503 instead indicates missing setup. The deterministic equivalent is covered by automated tests.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"start\": \"Chicago, IL\",\n  \"finish\": \"Denver, CO\",\n  \"initial_fuel_price\": \"3.75\",\n  \"max_range_miles\": 1,\n  \"initial_fuel_gallons\": 0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP 422', () => pm.response.to.have.status(422));"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    }
+  ]
+}

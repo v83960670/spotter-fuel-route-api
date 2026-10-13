@@ -1,0 +1,33 @@
+{
+  "kind": "synthetic offline benchmark; provider mocked; no network latency included",
+  "python": "3.14.6",
+  "station_count": 8151,
+  "geometry_points": 1501,
+  "cold_samples_ms": [
+    1357.448,
+    1123.016,
+    1079.379,
+    1128.903,
+    1033.001
+  ],
+  "warm_samples_ms": [
+    19.967,
+    21.967,
+    19.488,
+    22.568,
+    21.158
+  ],
+  "cold_median_ms": 1123.016,
+  "warm_median_ms": 21.158,
+  "mock_directions_calls_for_five_cold_and_five_warm_requests": 5,
+  "optimizer_10000_candidates_median_ms": 102.425,
+  "api_metrics_last_cold_request": {
+    "cache_hit": false,
+    "directions_calls": 1,
+    "geocoding_calls": 0,
+    "provider_ms": 0.09,
+    "station_selection_ms": 925.005,
+    "optimization_ms": 83.747,
+    "total_ms": 1012.455
+  }
+}
